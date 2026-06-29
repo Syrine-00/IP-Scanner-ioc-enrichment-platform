@@ -26,7 +26,7 @@ Built as part of a cybersecurity internship at **ODDO BHF** — SOC team support
 ![Web Interface](screenshots/web_interface.png)
 ![Web Interface 2](screenshots/web_interface2.png)
 
-###CLI
+### CLI
 ![CLI Scan](screenshots/cli_scan.png)
 
 ---
