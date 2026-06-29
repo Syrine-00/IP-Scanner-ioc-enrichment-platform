@@ -21,14 +21,14 @@ Built as part of a cybersecurity internship at **ODDO BHF** — SOC team support
 
 ##  Screenshots
 
-```
+
 ### Web Interface
 ![Web Interface](screenshots/web_interface.png)
 ![Web Interface 2](screenshots/web_interface2.png)
 
 ###CLI
 ![CLI Scan](screenshots/cli_scan.png)
-```
+
 ---
 
 ##  Project Structure
