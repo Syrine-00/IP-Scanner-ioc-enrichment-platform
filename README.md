@@ -123,4 +123,4 @@ Private IPs are automatically skipped.
 ##  Author
 
 **Syrine Guermazi** — Cybersecurity Intern @ ODDO BHF  
-2ème année BI & BIS — ISG Tunis
+2ème année BIS — ISG Tunis
