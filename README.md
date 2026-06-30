@@ -17,14 +17,15 @@ Built as part of a cybersecurity internship at **ODDO BHF** — SOC team support
 |  Web Interface | Flask UI to scan IPs and URLs from the browser |
 | Polling Logic | Auto-polls VT after URL submission until analysis is complete |
 
+File scan on web may take a while to complete, depending on the length of your file. Preferably use the CLI.
 ---
 
 ##  Screenshots
 
 
 ### Web Interface
-![Web Interface](screenshots/web_interface.png)
-![Web Interface 2](screenshots/web_interface2.png)
+![Web Interface](screenshots/threatscanner.png)
+![Web Interface 2](screenshots/threatscanner2.png)
 
 ### CLI
 ![CLI Scan](screenshots/cli_scan.png)
