@@ -253,7 +253,7 @@ def main():
     elif args.url:
         scan_url(args.url)
     else:
-        print("No valid input provided. Please use --ip, --rangeip, --file, or --url.")
+        print("No valid input provided. Please use --ip, --rangeip, --file, --url or --web.")
 
 
 
