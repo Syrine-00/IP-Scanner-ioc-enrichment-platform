@@ -6,6 +6,7 @@ import os
 import requests
 import time
 import base64
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request
 
 dotenv.load_dotenv()
@@ -78,7 +79,9 @@ def scan_ip(ip):
     stats=data["data"]["attributes"]["last_analysis_stats"]
     owner = data["data"]["attributes"]["as_owner"]
 
-    display_result(ip, stats, owner)
+    result = build_result(ip, stats, owner)
+    display_result(result)
+    return result
 
     
 
@@ -101,6 +104,7 @@ def scan_range_ip(rangeip):
 
 
 def scan_file(file_path):
+    results = []
     try:
         with open(file_path, 'r') as file:
             for  line in file:
@@ -111,7 +115,9 @@ def scan_file(file_path):
                     if ip.is_private:
                         print(f"IP {ip} is PRIVATE, skipping scan.")
                         continue
-                    scan_ip(ip)
+                    result=scan_ip(ip)
+                    if result:
+                        results.append(result)
                     time.sleep(15)
                 except ValueError:
                     if ip=="":
@@ -122,6 +128,8 @@ def scan_file(file_path):
     except FileNotFoundError:
         print(f"File {file_path} not found.")
         return
+    
+    return results
 
 
 
@@ -196,32 +204,51 @@ def scan_url(url):
 app = Flask(__name__)
 
 
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
+    results = None
     error = None
     scan_type = request.form.get("scan_type", "ip")
     scan_value = ""
 
     if request.method == "POST":
         scan_type = request.form.get("scan_type")
-        scan_value = request.form.get("scan_value", "").strip()
 
-        if not scan_value:
-            error = "Please enter a value to scan."
-        elif scan_type == "ip":
-            result = scan_ip(scan_value)
-        elif scan_type == "url":
-            result = scan_url(scan_value)
+        if scan_type == "file":
+            uploaded_file = request.files.get("scan_file")
+
+            if not uploaded_file or uploaded_file.filename == "":
+                error = "Please upload a file."
+            else:
+                filename = secure_filename(uploaded_file.filename)
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                uploaded_file.save(filepath)
+                results = scan_file(filepath)
+
         else:
-            error = "Unknown scan type."
+            scan_value = request.form.get("scan_value", "").strip()
 
-        if result is None and error is None:
-            error = "No usable result (invalid input or API error)."
+            if not scan_value:
+                error = "Please enter a value to scan."
+            elif scan_type == "ip":
+                result = scan_ip(scan_value)
+            elif scan_type == "url":
+                result = scan_url(scan_value)
+            else:
+                error = "Unknown scan type."
+
+            if result is None and error is None:
+                error = "No usable result (invalid input or API error)."
 
     return render_template(
         "index.html",
         result=result,
+        results=results,
         error=error,
         scan_type=scan_type,
         scan_value=scan_value,
